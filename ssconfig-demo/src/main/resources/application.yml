@@ -8,3 +8,7 @@ spring:
     name: ssconfig-demo
 server:
     port: 8888
+logging:
+  level:
+    root: info
+    com.stephenshen: debug

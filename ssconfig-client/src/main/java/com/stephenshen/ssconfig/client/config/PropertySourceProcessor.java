@@ -27,20 +27,25 @@ public class PropertySourceProcessor implements BeanFactoryPostProcessor, Enviro
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        ConfigurableEnvironment env = (ConfigurableEnvironment) environment;
-        if (env.getPropertySources().contains(SS_PROPERTY_SOURCES)) {
+        ConfigurableEnvironment configurableEnvironment = (ConfigurableEnvironment) environment;
+        if (configurableEnvironment.getPropertySources().contains(SS_PROPERTY_SOURCES)) {
             return;
         }
         // 通过 http 请求，去 ssconfig-server 获取配置 TODO
-        Map<String, String> config = new HashMap<>();
-        config.put("ss.a", "dev500");
-        config.put("ss.b", "b600");
-        config.put("ss.c", "c700");
-        SSConfigService configService = new SSConfigServiceImpl(config);
+
+        String app = configurableEnvironment.getProperty("ssconfig.app", "app1");
+        String env = configurableEnvironment.getProperty("ssconfig.env", "dev");
+        String ns = configurableEnvironment.getProperty("ssconfig.ns", "public");
+        String configServer = configurableEnvironment.getProperty("ssconfig.configServer", "http://localhost:9129");
+
+        ConfigMeta configMeta = new ConfigMeta(app, env, ns, configServer);
+
+
+        SSConfigService configService = SSConfigService.getDefault(configMeta);
         SSPropertySource propertySource = new SSPropertySource(SS_PROPERTY_SOURCE, configService);
         CompositePropertySource compositePropertySource = new CompositePropertySource(SS_PROPERTY_SOURCES);
         compositePropertySource.addPropertySource(propertySource);
-        env.getPropertySources().addFirst(compositePropertySource);
+        configurableEnvironment.getPropertySources().addFirst(compositePropertySource);
     }
 
     @Override
