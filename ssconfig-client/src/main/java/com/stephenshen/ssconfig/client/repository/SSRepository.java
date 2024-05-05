@@ -1,6 +1,7 @@
 package com.stephenshen.ssconfig.client.repository;
 
 import com.stephenshen.ssconfig.client.config.ConfigMeta;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 
@@ -12,9 +13,11 @@ import java.util.Map;
  */
 public interface SSRepository {
 
-    static SSRepository getDefault(ConfigMeta meta) {
-        return new SSRepositoryImpl(meta);
+    static SSRepository getDefault(ApplicationContext applicationContext, ConfigMeta meta) {
+        return new SSRepositoryImpl(applicationContext, meta);
     }
 
     Map<String, String> getConfig();
+
+    void addListener(SSRepositoryChangeListener listener);
 }

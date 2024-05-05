@@ -12,3 +12,4 @@ logging:
   level:
     root: info
     com.stephenshen: debug
+    cn.kimmking: debug
