@@ -41,9 +41,8 @@ public class PlaceholderHelper {
     public Object resolvePropertyValue(ConfigurableBeanFactory beanFactory, String beanName, String placeholder) {
         // resolve string value
         String strVal = beanFactory.resolveEmbeddedValue(placeholder);
-
-        BeanDefinition bd = (beanFactory.containsBean(beanName) ? beanFactory.getMergedBeanDefinition(beanName) : null);
-
+        BeanDefinition bd = (beanFactory.containsBean(beanName) ? beanFactory
+                .getMergedBeanDefinition(beanName) : null);
         // resolve expressions like "#{systemProperties.myProp}"
         return evaluateBeanDefinitionString(beanFactory, strVal, bd);
     }
@@ -108,7 +107,7 @@ public class PlaceholderHelper {
                     stack.push(placeholderCandidate.substring(0, separatorIndex));
                     String defaultValuePart =
                             normalizeToPlaceholder(placeholderCandidate.substring(separatorIndex + VALUE_SEPARATOR.length()));
-                    if (!StringUtils.hasText(defaultValuePart)) {
+                    if (StringUtils.hasText(defaultValuePart)) {
                         stack.push(defaultValuePart);
                     }
                 }
@@ -167,5 +166,18 @@ public class PlaceholderHelper {
             }
         }
         return -1;
+    }
+
+    public static void main(String[] args) {
+        String strVal = "${some.key:other.key}";
+        System.out.println(new PlaceholderHelper().extractPlaceholderKeys(strVal));
+        strVal = "${some.key:${some.other.key:100}}";
+        System.out.println(new PlaceholderHelper().extractPlaceholderKeys(strVal));
+        strVal = "${${some.key}}";
+        System.out.println(new PlaceholderHelper().extractPlaceholderKeys(strVal));
+        strVal = "${${some.key:other.key}}";
+        System.out.println(new PlaceholderHelper().extractPlaceholderKeys(strVal));
+        strVal = "${${some.key}:${another.key}}";
+        System.out.println(new PlaceholderHelper().extractPlaceholderKeys(strVal));
     }
 }
