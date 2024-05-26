@@ -1,5 +1,6 @@
 package com.stephenshen.ssconfig.client.config;
 
+import com.stephenshen.ssconfig.client.value.SpringValueProcessor;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -17,14 +18,19 @@ public class SSConfigRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         // ImportBeanDefinitionRegistrar.super.registerBeanDefinitions(importingClassMetadata, registry);
-        System.out.println("register PropertySourceProcessor");
-        String beanName = PropertySourceProcessor.class.getName();
+        registerClass(registry, PropertySourceProcessor.class);
+        registerClass(registry, SpringValueProcessor.class);
+    }
+
+    private static void registerClass(BeanDefinitionRegistry registry, Class<?> aClass) {
+        String beanName = aClass.getName();
+        System.out.println("register " + beanName);
         boolean hasRegistered = Arrays.asList(registry.getBeanDefinitionNames()).contains(beanName);
         if (hasRegistered) {
-            System.out.println("PropertySourceProcessor already registered");
+            System.out.println(beanName + " already registered");
             return;
         }
-        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(PropertySourceProcessor.class).getBeanDefinition();
+        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(aClass).getBeanDefinition();
         registry.registerBeanDefinition(beanName, beanDefinition);
     }
 }

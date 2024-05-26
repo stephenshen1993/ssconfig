@@ -6,7 +6,7 @@ POST http://localhost:9129/update?app=app1&env=dev&ns=public
 content-type: application/json
 
 {
-  "ss.a": "dev0000000000",
+  "ss.a": "dev666",
   "ss.c": "cc200",
   "ss.d": "dd200"
 }
