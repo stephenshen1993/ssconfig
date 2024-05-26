@@ -19,6 +19,9 @@ import java.util.Map;
 public class SSConfigController {
 
     @Autowired
+    DistributedLocks locks;
+
+    @Autowired
     private ConfigsMapper mapper;
     private Map<String, Long> VERSIONS = new HashMap<>();
 
@@ -51,5 +54,10 @@ public class SSConfigController {
     @GetMapping("/version")
     public long version(String app, String env, String ns) {
         return VERSIONS.getOrDefault(app + "-" + env + "-" + ns, -1L);
+    }
+
+    @GetMapping("/status")
+    public boolean status() {
+        return locks.getLocked().get();
     }
 }

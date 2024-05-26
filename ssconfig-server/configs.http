@@ -1,5 +1,5 @@
 ### list
-GET http://localhost:9129/list?app=app1&env=dev&ns=public
+GET http://localhost:9130/list?app=app1&env=dev&ns=public
 
 ### update
 POST http://localhost:9129/update?app=app1&env=dev&ns=public
@@ -16,3 +16,23 @@ GET http://localhost:9129/version?app=app1&env=dev&ns=public
 
 ### demo 8888
 GET http://localhost:8888/demo
+
+### update ssrpc configg
+POST http://localhost:9129/update?app=app1&env=dev&ns=public
+content-type: application/json
+
+{
+  "ssrpc.provider.metas.dc": "sz",
+  "ssrpc.provider.metas.gray": "false",
+  "ssrpc.provider.metas.unit": "S008",
+  "ssrpc.provider.metas.tc": 25
+}
+
+### get status 9129
+GET http://localhost:9129/status
+
+### get status 9130
+GET http://localhost:9130/status
+
+### get status 9131
+GET http://localhost:9131/status
